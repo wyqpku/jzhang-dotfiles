@@ -10,7 +10,7 @@ esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
-HISTCONTROL=erasedups
+HISTCONTROL=ignoreboth:erasedups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -112,20 +112,28 @@ fi
 # enable programmable completion features (you don't need to enable
 # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
 # sources /etc/bash.bashrc).
-[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+if ! shopt -oq posix; then
+	if [ -f /usr/share/bash-completion/bash_completion ]; then
+		. /usr/share/bash-completion/bash_completion
+	elif [ -f /usr/local/etc/profile.d/bash_completion.sh ]; then
+		. /usr/local/etc/profile.d/bash_completion.sh
+	elif [ -f /etc/bash_completion ]; then
+		. /etc/bash_completion
+	fi
+fi
 
-# No zsh
-export BASH_SILENCE_DEPRECATION_WARNING=1
+if [ -x /usr/bin/mint-fortune ]; then
+	/usr/bin/mint-fortune
+fi
 
-# Auto completion
-source /usr/local/etc/bash_completion.d/git-completion.bash
+# Auto completion for git
+if [ -f /usr/local/etc/bash_completion.d/git-completion.bash ]; then
+	source /usr/local/etc/bash_completion.d/git-completion.bash
+fi
 
-# pathes
-  export PATH=$PATH:~/bin
-  export PATH=$PATH:/Users/zhangjunbo/Library/Python/3.7/bin
 
 # pathes - kaldi
-  export KALDI_ROOT=~/src/Mi/kaldi
+  export KALDI_ROOT=~/src/kaldi
   export PATH=$PATH:$KALDI_ROOT/tools/openfst/bin
   export PATH=$PATH:$KALDI_ROOT/tools/irstlm/bin
   export PATH=$PATH:$KALDI_ROOT/tools/sctk/bin

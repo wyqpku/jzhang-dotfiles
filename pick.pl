@@ -11,7 +11,7 @@ while (<IN>) {
     my $name = shift @items;
     my $root = shift @items;
 
-    next if $root == '-';
+    next if $root eq '-';
 
     foreach (@items) {
         system("cp $root/$_ files/");
